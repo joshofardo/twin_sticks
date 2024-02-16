@@ -19,8 +19,6 @@ var _yOffset = lengthdir_y(weaponOffsetDist, aimDir);
 }
 
 //vfx
-//pause self
-
 function screen_pause()
 {
 	if instance_exists(oscreenpause)
@@ -42,6 +40,8 @@ function create_screen_pause(_time = 5)
 		timer = _time;
 	}
 }
+
+//player control functions
 function screen_shake(_amount = 4)
 {
 	
@@ -51,6 +51,173 @@ function screen_shake(_amount = 4)
 		yShakeAmount = _amount;
 	
 	}
+}
+function get_inputs()
+{
+rightKey = global.rightKey;
+leftKey = global.leftKey;
+upKey = global.upKey;
+downKey = global.downKey;
+shootKey = global.shootKey;
+swapKeyPressed = global.swapKeyPressed;
+startKeyPressed = global.startKeyPressed;
+punchKey = global.punchKey;
+}
+function player_movement()
+{
+		//get direction
+
+	var _horizKey = rightKey - leftKey;
+	var _vertKey = downKey - upKey;
+	
+	moveDir = point_direction(0, 0, _horizKey, _vertKey);
+	
+	//get the x and y variables
+	
+	var _spd = 0;
+	show_debug_log(_spd);
+	
+	var _inputLevel = point_distance(0, 0, _horizKey, _vertKey);
+	_inputLevel = clamp(_inputLevel, -1, 1);
+	_spd = moveSpd * _inputLevel;
+	
+	xspd = lengthdir_x(_spd, moveDir );
+	yspd = lengthdir_y(_spd, moveDir );
+}
+function player_collision()
+{
+	var _horizKey = rightKey - leftKey;
+	var _vertKey = downKey - upKey;
+	
+	if place_meeting( x + xspd, y, owall)
+	{
+		move_and_collide(_horizKey * moveSpd, _vertKey * moveSpd, owall, 4, 0, 0, 6, 6);
+	}
+	else if place_meeting( x, y + yspd, owall)
+	{
+		move_and_collide(_horizKey * moveSpd, _vertKey * moveSpd, owall, 4, 0, 0, 6, 6);
+	}
+	else 
+	{
+	//move the player normally
+	x += xspd;
+	y += yspd;
+	}
+}
+function pause_game()
+{
+	if startKeyPressed
+{
+	if !instance_exists(opausemenu)
+	{
+		instance_create_depth(0, 0, 0, opausemenu);
+	}
+	else
+	{
+		instance_destroy(opausemenu);
+	}
+}
+}
+function player_shoot()
+{
+		//shoot the weapon
+	#region
+	if shootTimer > 0 
+	{
+		shootTimer--; 
+	};
+	
+	if shootKey && shootTimer <= 0
+	{
+		//reset the timer 
+		shootTimer = weapon.cooldown;
+		
+		screen_shake(1);
+		
+		//create the bullet
+
+		var _xOffset = lengthdir_x(weapon.length + weaponOffsetDist, aimDir);
+		var _yOffset = lengthdir_y(weapon.length + weaponOffsetDist, aimDir);
+		
+		var _spread  = weapon.spread;
+		var _spreadDiv = _spread / max(weapon.bulletNum-1, 1);
+		//create the correct number of bullets
+		for ( var i = 0; i < weapon.bulletNum; i++)
+		{
+		
+			var _bulletInst = instance_create_depth(x + _xOffset, centerY + _yOffset, depth-100, weapon.bulletobj);
+		
+		//change bullet's direction
+		
+		with( _bulletInst )
+		{ 
+			dir = other.aimDir - _spread/2 + _spreadDiv*i;
+			//turn the bullet to the correct direction if needed
+			if dirFix == true
+			{
+				image_angle = dir;
+			}
+		}
+	}
+	}
+}
+function sprite_control()
+{
+		//player aiming
+		centerY = y + centerYOffset;
+		aimDir = point_direction(x, centerY, mouse_x, mouse_y);
+		
+	//make sure the player is facing the correct direction
+	//to change to 45 degree angles change to 45		
+		face = round( aimDir/90 );
+		if face == 4 {face = 0};
+		
+		//determine if the player is running forwards or backwards relative to where they are aiming
+		if (face == 2) || (face == 0)
+		{
+			if xspd != 0
+			{
+				image_speed = 1 * sign(xspd);
+			}
+			else
+			{
+				image_speed = 1;
+			}
+		}
+		//same but for y direction
+				if (face == 1) || (face == 3)
+		{
+			if yspd != 0
+			{
+				image_speed = 1 * sign(yspd);
+			}
+			else
+			{
+				image_speed = 1;
+			}
+		}
+	//animate
+	if xspd == 0 && yspd == 0
+	{
+		image_index = 0;
+	}
+	//set the player sprite
+	mask_index = splayerdown;
+	sprite_index = sprite[face];
+	
+}
+function weapon_swapping()
+{
+		var _playerweapons = global.PlayerWeapons;
+	//cycle through weapons
+	if swapKeyPressed
+	{
+		//change the selection and wrap around
+		SelectedWeapon++;
+		if SelectedWeapon >= array_length(_playerweapons) {SelectedWeapon = 0;};
+	}
+			//set the new weapon
+		weapon = _playerweapons[SelectedWeapon];
 }
 
 //damage calculation
@@ -64,7 +231,7 @@ function screen_shake(_amount = 4)
 		if _iframes
 		{
 			show_debug_message("iframes");
-			iframeTimer = 0;
+			iframeTimer = 90;
 			iframeNumber = 90;
 		}
 		else 
@@ -74,13 +241,10 @@ function screen_shake(_amount = 4)
 		}
 	
 	}
-
-	//damage clean up
 	function get_damaged_cleanup()
 	{
-		//DO NOT NEED if we are using iframes
+		//DO NOT NEED if we are using iframes, player getting hit should not create a damage list
 		show_debug_message("destroying lists");
-		//delete our damage list data structure to free memory
 		ds_list_destroy(damageList);
 	}
 	
@@ -92,26 +256,74 @@ function screen_shake(_amount = 4)
 	/// @return 
 	function get_damage(_damageObj, _iframes = false)
 	{
-		//receive damage
-			var _hitConfirm = false;
-			if is_colliding_with_bullet(_damageObj)
+		var _hitConfirm = false;
+		if is_colliding_with_damageObj(_damageObj)
+		{	
+			if _iframes == true
+			{
+				//what happens when someone with iframes gets hit
+				show_debug_message("hitting box");
+				_damageObj.hitConfirm = true;
+				hp -= _damageObj.damage;
+				create_screen_pause(15);
+				screen_shake(10);
+				hp = clamp(hp, 0, maxHp);
+				state = states.KNOCKBACK;
+			}
+			else if _iframes == false
 			{	
-				//getting a list of damage instances
-				//create ds list and copy instances to it
-					var _instList = ds_list_create();
-					instance_place_list(x, y, _damageObj, _instList, false);
-					if _damageObj != odamageparent
+				check_number_of_bullets_colliding_on_that_frame(_damageObj);	
+				apply_damage_per_bullet(listSize, _damageObj);
+				ds_list_destroy( instList );
+			
+						//clear the damage list of objects that dont exist andmore or are not touching anymore
+					var _damageListSize = ds_list_size(damageList);
+					for(var i = 0; i < _damageListSize; i++)
 					{
-						instance_place_list(x, y, odamageall, _instList, false);
-					}
-				//get the size of our list
-					var _listSize = ds_list_size(_instList);
-				
-				//loop through the list
-					for(var i = 0; i < _listSize; i++ )
+						//if not touching the damage instance anymore, remove it from the list and set the loop back one position
+						var _inst = ds_list_find_value(damageList, i);
+						if !instance_exists(_inst) || !place_meeting(x, y, _inst)
+						{
+							ds_list_delete(damageList, i );
+							i--;
+							_damageListSize--;
+						}
+					}	
+				}
+			}
+	
+
+
+	//return hitconfirm variable value
+	return _hitConfirm;
+
+		}
+
+function flash_from_visibile_and_invisible_after_getting_hit(_iframes)
+{}
+
+function is_colliding_with_damageObj(_damageObj)
+{
+	return place_meeting( x, y, _damageObj) || 
+	(_damageObj != odamageparent && place_meeting(x, y, odamageall))
+}
+function check_number_of_bullets_colliding_on_that_frame(_damageObj)
+{
+			//create ds list and copy instances to it
+			instList = ds_list_create();
+			instance_place_list(x, y, _damageObj, instList, false);
+			if _damageObj != odamageparent
+			{
+				instance_place_list(x, y, odamageall, instList, false);
+				listSize = ds_list_size(instList);
+			}
+}
+function apply_damage_per_bullet(listSize, _damageObj)
+{
+		for(var i = 0; i < listSize; i++ )
 					{		
 						//get a damage object instance from the list, select one of the id's
-						var _inst = ds_list_find_value( _instList, i);
+						var _inst = ds_list_find_value( instList, i);
 		
 						//check if this instance is already in the damage list
 						if _iframes == true || ds_list_find_index( damageList, _inst) == -1
@@ -127,7 +339,7 @@ function screen_shake(_amount = 4)
 								hp -= _inst.damage;
 								//tell the damage instance it has impacted
 								_inst.hitConfirm = true;	
-								_hitConfirm = true;
+								//_hitConfirm = true;
 								show_debug_message("hit confirm");
 								var _dead = IsDead();
 								path_end();
@@ -151,83 +363,5 @@ function screen_shake(_amount = 4)
 								}
 							}
 					}
-			
-				//set iframes if we were hit
-				if _iframes == true && _hitConfirm == true
-				{
-				
-					show_debug_message("ouch");
-					iframeTimer = iframeNumber;
-				}						
 	
-			//free memory by destroying ds_list
-			ds_list_destroy( _instList );
-			}
-
-			if _iframes == false
-			{
-					//clear the damage list of objects that dont exist andmore or are not touching anymore
-				var _damageListSize = ds_list_size(damageList);
-				for(var i = 0; i < _damageListSize; i++)
-				{
-					//if not touching the damage instance anymore, remove it from the list and set the loop back one position
-					var _inst = ds_list_find_value(damageList, i);
-					if !instance_exists(_inst) || !place_meeting(x, y, _inst)
-					{
-						ds_list_delete(damageList, i );
-						i--;
-						_damageListSize--;
-					}
-				}	
-		}
-	
-	//clamp hp
-	hp = clamp(hp, 0, maxHp);
-
-	//return hitconfirm variable value
-	return _hitConfirm;
-
-		}
-
-function flash_from_visibile_and_invisible_after_getting_hit(_iframes = false)
-{
-	
-			if _iframes && iframeTimer > 0
-		{
-			show_debug_message("iframes true");
-		
-			iframeTimer--;
-			show_debug_message(iframeTimer);
-			if iframeTimer mod 5 == 0
-			{
-				show_debug_message("flashing");
-				if image_alpha == 1
-				{
-					image_alpha = 0;
-				}else{
-					image_alpha = 1;
-				}
-			}
-		
-			//clamp hp
-			hp = clamp(hp, 0, maxHp);
-		
-			//exit by returning the function as false
-			return false;
-
-		}
-		else if !_iframes
-		//make sure iframe blinking stops
-		{
-			image_alpha = 1;
-		}
 }
-function is_colliding_with_bullet(_damageObj)
-{
-	return place_meeting( x, y, _damageObj) || 
-	(_damageObj != odamageparent && place_meeting(x, y, odamageall))
-}
-
-
-	
-

@@ -1,5 +1,5 @@
 event_inherited();
-state = states.IDLE;
+state = states.MOVE;
 //damage setup
 get_damaged_Create(20, true);
 //variables for movement
@@ -7,13 +7,9 @@ get_damaged_Create(20, true);
 	moveSpd = 10;
 	xspd = 0;
 	yspd = 0;
-	
 	startKeyPressed = true;
-	
-	
-	
 
-
+	iframeTimer = 90;
 //sprite control
 	centerYOffset = -2;
 	centerY = y + centerYOffset; //set in step event
@@ -27,6 +23,7 @@ get_damaged_Create(20, true);
 	sprite[2] = splayerleft;
 	sprite[3] = splayerdown;
 	
+_iframes = true;
 	
 	
 //weapon info

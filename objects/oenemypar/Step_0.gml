@@ -5,7 +5,6 @@ switch(state) {
 	case states.IDLE:
 		calc_entity_movement();
 		EnemyAnim();
-		flash_from_visibile_and_invisible_after_getting_hit();
 		get_damage(odamagenemy);
 		CheckForPlayer();
 		CheckFacing();
@@ -28,7 +27,6 @@ switch(state) {
 		}
 		CheckForPlayer();
 		CheckFacing();
-		flash_from_visibile_and_invisible_after_getting_hit();
 		get_damage(odamagenemy);
 		if IsDead() 
 		{
@@ -44,7 +42,6 @@ switch(state) {
 	break;
 	case states.KNOCKBACK:
 		calc_knockback_movement();
-		flash_from_visibile_and_invisible_after_getting_hit();
 		get_damage(odamagenemy);
 		if IsDead() 
 		{
@@ -63,12 +60,8 @@ switch(state) {
 	break;
 	
 	case states.DEAD:
-		show_debug_message("dead");
 		path_end();
 		get_damage(odamagenemy);
-		//add something in here so if the dead enemies get knocked against a wall 
-		//they dont bounce off
-		//calc_entity_movement();
 		EnemyAnim();
 	break;
 	

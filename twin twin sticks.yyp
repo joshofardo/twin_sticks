@@ -121,6 +121,7 @@
     {"id":{"name":"oenemy2","path":"objects/oenemy2/oenemy2.yy",},},
     {"id":{"name":"oplayer","path":"objects/oplayer/oplayer.yy",},},
     {"id":{"name":"Sprite4","path":"sprites/Sprite4/Sprite4.yy",},},
+    {"id":{"name":"Shader1","path":"shaders/Shader1/Shader1.yy",},},
     {"id":{"name":"sdummyhurt","path":"sprites/sdummyhurt/sdummyhurt.yy",},},
     {"id":{"name":"shealthbar","path":"sprites/shealthbar/shealthbar.yy",},},
     {"id":{"name":"Sprite36","path":"sprites/Sprite36/Sprite36.yy",},},
