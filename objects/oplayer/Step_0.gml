@@ -1,11 +1,9 @@
 switch(state) 
 
 {case states.MOVE:
-
 		//player standard functions
 		get_inputs();
 		pause_game();
-		//pause self
 		if screen_pause() {exit;};
 		player_movement();
 		player_collision();
@@ -14,6 +12,15 @@ switch(state)
 		sprite_control();
 		weapon_swapping();
 		player_shoot();
+		if dodgeTimer < 45
+		{
+			dodgeTimer++
+		}
+		if dodgeTimer >= 45 && dodgeKey
+		{
+			dodgeTimer = 20;
+			state = states.DODGE;
+		}
 	if IsDead()
 	{
 		create_screen_pause(25);
@@ -27,7 +34,6 @@ switch(state)
 		{
 			get_inputs();
 			pause_game();
-			//pause self
 			if screen_pause() {exit;};
 			player_movement();
 			player_collision();
@@ -50,6 +56,32 @@ switch(state)
 		}
 		else
 		iframeTimer = 90;
+		state = states.MOVE;
+	break;
+	case states.DODGE:
+	//player's functions during knockback
+		sprite_index = splayer2up;
+		if dodgeTimer > 0 
+		{
+			sprite_control();
+			pause_game();
+			dodgeTimer--
+			moveSpd = 25;
+			if screen_pause() {exit;};
+			player_movement();
+			player_collision();
+			depth = -bbox_bottom;
+			weapon_swapping();
+			if IsDead()
+				{
+					create_screen_pause(25);
+					screen_shake(5);
+				}
+			exit;
+		}
+		else
+		moveSpd = 10;
+		dodgeTimer = 15;
 		state = states.MOVE;
 
 	break;

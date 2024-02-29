@@ -15,10 +15,11 @@ function calc_entity_movement()
 
 function calc_knockback_movement()
 {
-	get_damage(odamagenemy);
-	show_debug_message("knockback");
+	//get_damage(odamagenemy);
 	x += hsp;
 	y += vsp;
+	
+	
 	
 	//slowdown 
 	
@@ -26,6 +27,8 @@ function calc_knockback_movement()
 	vsp *= global.drag;
 	
 	checkIfStopped();
+	
+	show_debug_message(knockback_time);
 	
 	//exit state
 	if knockback_time <= 0 state = states.IDLE;
@@ -95,9 +98,10 @@ function CheckForPlayer()
 	else
 	{
 		//are we close enough to attack
-		if _dis <= attack_dis 
+		if _dis <= attack_dis && can_attack
 		{
 			path_end();
+			state = states.ATTACK;
 		}
 	}		
 }
@@ -137,10 +141,46 @@ function IsDead()
 
 function checkIfStopped()
 {
-	if abs(hsp) < 0.1 hsp = 0;
-	if abs(vsp) < 0.1 vsp = 0;
+	if abs(hsp) < 0.01 hsp = 0;
+	if abs(vsp) < 0.01 vsp = 0;
 }
 
+function attack_countdown()
+{
+	if attack_cooldown >0
+	{
+	attack_cooldown--;
+		if attack_cooldown <= 0
+		{
+			attack_cooldown = 0;
+			show_debug_message("ready to attacck");
+			can_attack = true;
+		}
+	}
+}
+function perform_attack()
+{
+	if image_index >= attack_frame and can_attack
+	{
+		//reset for next attack
+		can_attack = false;
+		attack_cooldown = 75;
+		
+		//get attack direction
+		var _dir = point_direction(x, y, oplayer.x, oplayer.y);
+		
+		//get attack position
+		var _xx = x + lengthdir_x(attack_dis, _dir);
+		var _yy = y + lengthdir_y(attack_dis, _dir);
+		
+		//create hitbox and pass our varibales to the hitbox
+		var _inst = instance_create_layer(_xx, _yy, "Instances", testmelee);
+		_inst.owner_id = id;
+		_inst.damage = damage;
+		_inst.knockback_time = knockback_time;
+	}
+}
+		
 function showHurt()
 {
 	if knockback_time-- > 0
@@ -156,6 +196,15 @@ function showHealthBar()
 	{
 		draw_healthbar(x - 20, y - 30, x+7, y - 30, hp/hp_max*100, $003300, $3232FF, $00B00, 0, 1, 1);
 	}
+}
+
+function setupKnockback(_dead, _damageObj)
+{
+								//calculating enemy knockback distance for if the target is dead or alive
+								var _dis = _dead ? 30 : 4;
+								var _dir = _damageObj.dir;
+								hsp += lengthdir_x(_dis, _dir);
+								vsp += lengthdir_y(_dis, _dir);
 }
 
 	

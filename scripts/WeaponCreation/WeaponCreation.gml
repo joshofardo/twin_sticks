@@ -34,7 +34,7 @@ function create_weapon( _sprite = sgun, _length = 0, _bulletobj = owhitebullet, 
 		sgun2,
 		sprite_get_bbox_right(sgun2) - sprite_get_xoffset(sgun2),
 		opinkbullet,
-		7,
+		4,
 		1,
 		0,
 		sgun2pickup

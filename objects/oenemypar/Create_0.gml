@@ -22,6 +22,14 @@ attack_dis = 30;
 hspd = 0;
 vspd = 0;
 
+attack_dis = 50;
+
+attack_frame = 1;
+can_attack = true;
+attack_cooldown = 600;
+damage = 2;
+knockback_time = 10;
+
 //hp_max = 10;
 //hp = hp_max
 

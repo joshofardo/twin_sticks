@@ -3,11 +3,16 @@ CheckForPlayer();
 
 switch(state) {
 	case states.IDLE:
+		attack_countdown();
 		calc_entity_movement();
 		EnemyAnim();
 		get_damage(odamagenemy);
 		CheckForPlayer();
-		CheckFacing();
+		CheckFacing();	if IsDead() 
+		{
+			mask_index = -1;
+			state = states.DEAD;
+		}
 		if (path_index != -1)
 		{
 			state = states.MOVE;
@@ -15,22 +20,14 @@ switch(state) {
 	break;
 	
 	case states.MOVE:
+		attack_countdown();
 		calc_entity_movement();
-		//abstract this
-		if place_meeting(x + hspd, y, owall) && (knockback_time > 0)
-		{
-			hspd *= -1;
-		}
-		if place_meeting(x, y + vspd, owall) && (knockback_time > 0)
-		{
-			vspd *= -1;
-		}
 		CheckForPlayer();
 		CheckFacing();
 		get_damage(odamagenemy);
 		if IsDead() 
 		{
-			show_debug_message("switching to kb state");
+			mask_index = -1;
 			state = states.DEAD;
 		}
 		EnemyAnim();
@@ -40,34 +37,65 @@ switch(state) {
 			state = states.IDLE;
 		}
 	break;
+	
 	case states.KNOCKBACK:
-		calc_knockback_movement();
-		get_damage(odamagenemy);
-		if IsDead() 
+	if hp > 0
 		{
-			show_debug_message("switching to kb state");
-			state = states.DEAD;
-		}
+		if place_meeting( x + hspd, y, owall)
+			{
+				hspd = -hspd;
+			}
+			else if place_meeting( x, y + vspd, owall)
+			{
+				vspd = -vspd;
+			}
+		
 		EnemyAnim();
-			
+		get_damage(odamagenemy);
+		calc_knockback_movement();
+	}
+	else 
+	{
+		state = states.DEAD;
+	}
 	break;
 	
 	case states.ATTACK:
-		calc_entity_movement();
-		flash_from_visibile_and_invisible_after_getting_hit();
 		get_damage(odamagenemy);
-		EnemyAnim();
+		attack_countdown();
+		CheckForPlayer();
+		{
+			perform_attack();
+			EnemyAnim();
+		}
+		show_debug_message(image_index);
+		if image_index >=3
+		{
+			can_attack = false;
+			attack_cooldown = 100;
+			image_index = 0;
+			state = states.IDLE;
+		}
 	break;
 	
 	case states.DEAD:
+		if place_meeting( x + hspd, y, owall)
+			{
+				hspd = -hspd;
+			}
+			else if place_meeting( x, y + vspd, owall)
+			{
+				vspd = -vspd;
+			}
+		can_attack = false;
+		mask_index = -1;
 		path_end();
-		get_damage(odamagenemy);
 		EnemyAnim();
+		calc_entity_movement();
 	break;
 	
 
 }
-
 
 
 

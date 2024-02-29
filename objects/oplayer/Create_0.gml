@@ -23,6 +23,8 @@ get_damaged_Create(20, true);
 	sprite[2] = splayerleft;
 	sprite[3] = splayerdown;
 	
+	dodgeTimer = 45;
+	
 _iframes = true;
 	
 	

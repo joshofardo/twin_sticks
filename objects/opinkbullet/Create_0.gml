@@ -2,10 +2,10 @@
 // You can write your code in this editor
 event_inherited();
 
-damage = 3;
+damage = 1;
 
 dir = 0;
-spd = 35;
+spd = 45;
 xspd = 0;
 yspd = 0;
 image_xscale = 3;

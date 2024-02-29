@@ -2,6 +2,7 @@ event_inherited();
 
 get_damage(owhitebullet);
 
+can_attack = true;
 
 hspd = 0;
 vspd = 0;

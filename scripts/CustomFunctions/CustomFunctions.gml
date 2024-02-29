@@ -62,6 +62,7 @@ shootKey = global.shootKey;
 swapKeyPressed = global.swapKeyPressed;
 startKeyPressed = global.startKeyPressed;
 punchKey = global.punchKey;
+dodgeKey = global.dodgeKey;
 }
 function player_movement()
 {
@@ -132,7 +133,7 @@ function player_shoot()
 		//reset the timer 
 		shootTimer = weapon.cooldown;
 		
-		screen_shake(1);
+		screen_shake(3);
 		
 		//create the bullet
 
@@ -298,15 +299,11 @@ function weapon_swapping()
 	return _hitConfirm;
 
 		}
-
-function flash_from_visibile_and_invisible_after_getting_hit(_iframes)
-{}
-
-function is_colliding_with_damageObj(_damageObj)
-{
-	return place_meeting( x, y, _damageObj) || 
-	(_damageObj != odamageparent && place_meeting(x, y, odamageall))
-}
+		function is_colliding_with_damageObj(_damageObj)
+		{
+			return place_meeting( x, y, _damageObj) || 
+			(_damageObj != odamageparent && place_meeting(x, y, odamageall))
+		}
 function check_number_of_bullets_colliding_on_that_frame(_damageObj)
 {
 			//create ds list and copy instances to it
@@ -337,30 +334,27 @@ function apply_damage_per_bullet(listSize, _damageObj)
 							
 								//take damage from specific instance
 								hp -= _inst.damage;
+								
 								//tell the damage instance it has impacted
 								_inst.hitConfirm = true;	
-								//_hitConfirm = true;
-								show_debug_message("hit confirm");
 								var _dead = IsDead();
 								path_end();
-								//set a knockback distance
-								//if the enemy IS not dead
 								
-								//callculating enemy knockback
-								var _dis = _dead ? 30 : 4;
-								var _dir = _damageObj.dir;
-								hsp += lengthdir_x(_dis, _dir);
-								vsp += lengthdir_y(_dis, _dir);
+								setupKnockback(_dead, _damageObj);
 								
 								calc_path_delay = 60;//  make this an argument for get damage function
 								alert = true;
 								knockback_time = 4;
-								show_debug_message("kb")
-								if !_dead 
+								if hp > 0
 								{
-									show_debug_message("switching to kb state");
 									state = states.KNOCKBACK;
 								}
+								else if hp <= 0
+								{
+									create_screen_pause(5);
+									state = states.DEAD;
+								}
+				
 							}
 					}
 	

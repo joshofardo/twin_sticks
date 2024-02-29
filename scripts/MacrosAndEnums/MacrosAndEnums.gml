@@ -7,4 +7,5 @@ enum states
 	ATTACK,
 	DEAD,
 	KNOCKBACK,
+	DODGE 
 }
