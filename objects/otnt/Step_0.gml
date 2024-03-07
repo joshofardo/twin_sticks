@@ -1,6 +1,6 @@
 /// @description Insert description here
 // You can write your code in this editor
-get_damage(odamageparent);
+get_damage(odamagenemy);
 
 //show damage
 var _healthPercent =1 - (hp/maxHp);

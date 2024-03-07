@@ -39,6 +39,7 @@ switch(state) {
 	break;
 	
 	case states.KNOCKBACK:
+	
 	if hp > 0
 		{
 		if place_meeting( x + hspd, y, owall)

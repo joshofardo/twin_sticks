@@ -34,7 +34,7 @@ knockback_time = 10;
 //hp = hp_max
 
 _iframes = false;
-
+_env = false;
 state = states.IDLE;
 
 s_idle = senemyidle;

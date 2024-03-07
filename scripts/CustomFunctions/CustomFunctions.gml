@@ -255,7 +255,7 @@ function weapon_swapping()
 	///target is dead, 
 	/// @params 
 	/// @return 
-	function get_damage(_damageObj, _iframes = false)
+	function get_damage(_damageObj, _iframes = false, _env = false)
 	{
 		var _hitConfirm = false;
 		if is_colliding_with_damageObj(_damageObj)
@@ -269,7 +269,10 @@ function weapon_swapping()
 				create_screen_pause(15);
 				screen_shake(10);
 				hp = clamp(hp, 0, maxHp);
-				state = states.KNOCKBACK;
+				if _env == false
+				{
+					state = states.KNOCKBACK;
+				}
 			}
 			else if _iframes == false
 			{	
@@ -314,6 +317,7 @@ function check_number_of_bullets_colliding_on_that_frame(_damageObj)
 				instance_place_list(x, y, odamageall, instList, false);
 				listSize = ds_list_size(instList);
 			}
+
 }
 function apply_damage_per_bullet(listSize, _damageObj)
 {
@@ -337,24 +341,24 @@ function apply_damage_per_bullet(listSize, _damageObj)
 								
 								//tell the damage instance it has impacted
 								_inst.hitConfirm = true;	
-								var _dead = IsDead();
 								path_end();
-								
-								setupKnockback(_dead, _damageObj);
-								
-								calc_path_delay = 60;//  make this an argument for get damage function
-								alert = true;
-								knockback_time = 4;
-								if hp > 0
+								if _env == false
 								{
-									state = states.KNOCKBACK;
+									var _dead = IsDead();
+									setupKnockback(_dead, _damageObj);
+									calc_path_delay = 60;//  make this an argument for get damage function
+									alert = true;
+									knockback_time = 4;
+									if hp > 0
+									{
+										state = states.KNOCKBACK;
+									}
+									else if hp <= 0
+									{
+										create_screen_pause(5);
+										state = states.DEAD;
+									}
 								}
-								else if hp <= 0
-								{
-									create_screen_pause(5);
-									state = states.DEAD;
-								}
-				
 							}
 					}
 	
