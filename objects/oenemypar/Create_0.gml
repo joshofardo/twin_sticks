@@ -28,7 +28,7 @@ attack_frame = 1;
 can_attack = true;
 attack_cooldown = 600;
 damage = 2;
-knockback_time = 10;
+knockback_time = 60;
 
 //hp_max = 10;
 //hp = hp_max

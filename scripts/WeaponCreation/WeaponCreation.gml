@@ -50,5 +50,10 @@ function create_weapon( _sprite = sgun, _length = 0, _bulletobj = owhitebullet, 
 		),
  }
  
+// show_debug_message("plplplpl");
+ show_debug_message(global.Weaponlist.pinkgun.cooldown);
+ global.Weaponlist.pinkgun.cooldown = 99
+ show_debug_message(global.Weaponlist.pinkgun.cooldown);
+ 
  
  

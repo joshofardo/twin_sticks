@@ -2,6 +2,7 @@ switch(state)
 
 {case states.MOVE:
 		//player standard functions
+		
 		get_inputs();
 		pause_game();
 		if screen_pause() {exit;};

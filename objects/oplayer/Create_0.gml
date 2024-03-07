@@ -34,10 +34,12 @@ shootTimer = 0;
 //add weapons to player inventory
 //array_push(global.PlayerWeapons, global.Weaponlist.startergun);
 array_push(global.PlayerWeapons, global.Weaponlist.pinkgun);
+
 //array_push(global.PlayerWeapons, global.Weaponlist.greengun);
 
 SelectedWeapon = 0;
 weapon = global.PlayerWeapons[SelectedWeapon];
+
 
 
 
