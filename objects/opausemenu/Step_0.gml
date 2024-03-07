@@ -3,10 +3,9 @@
 if !instance_exists(oplayer)
 
 {
-	instance_destroy();
-	exit;	
+    instance_destroy();
+    exit;
 }
 
 // Inherit the parent event
 event_inherited();
-

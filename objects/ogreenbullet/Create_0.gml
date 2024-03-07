@@ -7,11 +7,7 @@ spd = 5;
 xspd = 0;
 yspd = 0;
 
-
 //cleanup
 dirFix = false;
 maxDist = 50;
 destroy = false;
-
-
-

@@ -6,6 +6,3 @@
 draw_text(x, y - 50, knockback_time);
 event_inherited();
 draw_circle(x, y, 500, true);
-
-
-

@@ -1,2 +1,3 @@
-if screen_pause() {exit;};
-
+if screen_pause() {
+    exit;
+};

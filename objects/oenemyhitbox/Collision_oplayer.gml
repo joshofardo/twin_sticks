@@ -1,1 +1,1 @@
-get_damage()
+get_damage();

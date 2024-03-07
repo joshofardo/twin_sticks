@@ -42,5 +42,3 @@ s_move = senemywalk;
 s_attack = senemyattack;
 s_hurt = senemyhurt;
 s_dead = senemydead;
-
-

@@ -6,4 +6,3 @@ direction = 45;
 
 //direction = 60;
 //speedfade = .1;
-

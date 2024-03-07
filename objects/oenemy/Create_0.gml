@@ -3,10 +3,4 @@
 event_inherited();
 get_damaged_Create(20);
 
-global.totalEnemiesSpawned ++;
-
-
-
-
-
-
+global.totalEnemiesSpawned++;

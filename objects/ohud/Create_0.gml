@@ -10,6 +10,3 @@ global.enemyRoomMax = 10;
 global.activeEnemyMax = 4;
 global.totalEnemiesSpawned = 0;
 global.enemyKillCount = 0;
-
-
-

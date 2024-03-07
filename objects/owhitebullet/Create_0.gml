@@ -7,11 +7,8 @@ spd = 5;
 xspd = 0;
 yspd = 0;
 
-
 //cleanup
 dirFix = false;
 maxDist = 300;
 destroy = false;
 enemyDestroy = true;
-
-

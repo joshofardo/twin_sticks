@@ -5,10 +5,9 @@ image_angle = direction - 90;
 speed = clamp(spd, 0, 12);
 
 //reduce speed each frame
-spd -= .1;
+spd -= 0.1;
 
 //count down the hit timer so it can be hit again
-if hittimer > 0
-{
-	hittimer -- ;
+if hittimer > 0 {
+    hittimer--;
 }

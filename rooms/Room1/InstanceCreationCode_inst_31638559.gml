@@ -1,1 +1,1 @@
-weapon = global.Weaponlist.greengun
+weapon = global.Weaponlist.greengun;

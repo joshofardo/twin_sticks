@@ -11,12 +11,7 @@ yspd = 0;
 image_xscale = 3;
 image_yscale = 3;
 
-
-
 //cleanup
 dirFix = true;
 maxDist = 2500;
 //enemyDestroy = true;
-
-
-

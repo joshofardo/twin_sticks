@@ -2,7 +2,6 @@
 event_inherited();
 get_damage(owhitebullet);
 
-
 spd = 0;
 chaseSpd = 15;
 dir = 0;
@@ -16,8 +15,8 @@ face = 1;
 state = 0;
 
 //spawn from portal
-fadeSpd = 1/30;
-emergeSpd = .25;
+fadeSpd = 1 / 30;
+emergeSpd = 0.25;
 
 //shooting state 
 cooldowntime = 240;
@@ -28,6 +27,3 @@ bulletinst = noone;
 
 bulletxoffset = 8;
 bulletyoffset = 8;
-
-
-

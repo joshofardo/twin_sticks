@@ -5,9 +5,5 @@
 	state = states.DEAD;
 }*/
 
-
-
-
 // Inherit the parent event
 event_inherited();
-

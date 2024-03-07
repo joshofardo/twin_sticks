@@ -5,6 +5,3 @@
 draw_text(x, y - 50, hp);
 event_inherited();
 //draw_circle(x, y, 500, true);
-
-
-

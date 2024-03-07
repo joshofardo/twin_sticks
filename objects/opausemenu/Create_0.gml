@@ -1,4 +1,2 @@
-alpha = .6
+alpha = 0.6;
 depth = -8500;
-
-
