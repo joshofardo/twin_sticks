@@ -11,7 +11,7 @@ get_damaged_Create(20, false);
 alert = false;
 alertdist = 500;
 path = path_add();
-move_spd = 6;
+move_spd = 12;
 //variables for path calculation
 calc_path_delay = 30;
 //set a timer for when we calculate a path

@@ -2,6 +2,22 @@ switch(state)
 
 {case states.MOVE:
 		//player standard functions
+		distance_to_p2 = point_distance(x, y, opowerorb.x, opowerorb.y) - DANGER_ZONE;
+		
+		distance_to_p2 = max(distance_to_p2, 50);
+		distance_to_p2 = min(distance_to_p2, 10000);
+		/*if distance_to_p2 < 50
+		{
+			distance_to_p2 = 50;
+		}
+		else if distance_to_p2 > 700
+		{
+			distance_to_p2 = 700;
+		}
+		else */
+		{
+			global.Weaponlist.pinkgun.cooldown = (sqrt(distance_to_p2)/2.5);
+		}
 		
 		get_inputs();
 		pause_game();

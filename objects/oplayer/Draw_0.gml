@@ -3,6 +3,7 @@
 
 draw_text(x, y-100, xspd);
 draw_text(x, y-130, yspd);
+draw_text(x, y-200, weapon.cooldown);
 
 //draw the weapon behind the player
 

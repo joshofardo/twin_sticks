@@ -123,6 +123,14 @@ function player_shoot()
 {
 		//shoot the weapon
 	#region
+	
+	//if one player walks towards the other while the cooldown timer is running so that
+	//the time left on the timer is longer thn
+	if weapon.cooldown<shootTimer
+	{
+		shootTimer = weapon.cooldown;
+	}
+	
 	if shootTimer > 0 
 	{
 		shootTimer--; 

@@ -1,3 +1,6 @@
+	
+	//variable for proximity damage multiplier
+	distance_to_p2 = 50;
 event_inherited();
 state = states.MOVE;
 //damage setup

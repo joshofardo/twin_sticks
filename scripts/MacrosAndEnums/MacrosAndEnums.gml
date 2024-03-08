@@ -9,3 +9,5 @@ enum states
 	KNOCKBACK,
 	DODGE 
 }
+
+#macro DANGER_ZONE 80;
